@@ -246,7 +246,7 @@ h6 {
 
 .header-actions {
     display: flex;
-    gap: var(--space-3);
+    gap: var(--space-6);
 }
 
 .mobile-toggle {
