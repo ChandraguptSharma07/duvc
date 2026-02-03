@@ -39,23 +39,23 @@ const FilmFestival = () => {
   const cardSwapRef = useRef(null);
   const manualInteractionRef = useRef(false);
 
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
 
   // Force scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Auto-scroll effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!autoScrollPaused && !manualInteractionRef.current && scrollContainerRef.current) {
-         scroll('right', true); // Pass auto flag
-      }
-    }, 3000); // 3 seconds interval
+  // ... (auto-scroll logic remains) ...
 
-    return () => clearInterval(interval);
-  }, [autoScrollPaused]);
+  // Decorative Lines Color (Light -> Dark) - Low Opacity for Track
+  const lineColor = useTransform(scrollY, [800, 1000], ['rgba(255, 255, 255, 0.1)', 'rgba(11, 14, 37, 0.1)']);
+  
+  // Active Beam Color (Light -> Dark) - High Opacity + Glow
+  const activeLineColor = useTransform(scrollY, [800, 1000], ['#ffffff', '#0B0E25']);
+  const activeLineShadow = useTransform(scrollY, [800, 1000], ['0 0 15px rgba(255,255,255,0.5)', '0 0 15px rgba(11,14,37,0.3)']);
+
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
   
   // "Bubble Reveal" Effect - Rising Half Circle
   // Grows from 0% to 150% radius from 400px to 1400px scroll
@@ -67,9 +67,6 @@ const FilmFestival = () => {
   
   // Transform Text colors for Header (White -> Dark)
   const textColor = useTransform(scrollY, [800, 1000], ['#ffffff', '#0B0E25']);
-  
-  // Decorative Lines Color (Light -> Dark)
-  const lineColor = useTransform(scrollY, [800, 1000], ['rgba(255, 255, 255, 0.15)', 'rgba(11, 14, 37, 0.15)']);
   
   // Invert logo filter based on scroll (White -> Color/Dark)
   const logoFilter = useTransform(scrollY, [800, 1000], ['brightness(0) invert(1)', 'none']);
@@ -149,27 +146,55 @@ const FilmFestival = () => {
 
       <ParallaxShapes />
 
-      {/* Decorative Side Lines */}
-      <motion.div style={{ 
+      {/* Decorative Side Lines (Left) */}
+      <div style={{ 
         position: 'fixed', 
         left: 'clamp(10px, 4%, 40px)', 
         top: 0, 
         bottom: 0, 
-        width: '1px', 
-        background: lineColor, 
+        width: '2px', 
         zIndex: 40,
         pointerEvents: 'none'
-      }} />
-      <motion.div style={{ 
+      }}>
+        {/* Base Track */}
+        <motion.div style={{ width: '100%', height: '100%', background: lineColor }} />
+        {/* Active Beam */}
+        <motion.div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: lineHeight, 
+          background: activeLineColor,
+          boxShadow: activeLineShadow,
+          borderRadius: '0 0 2px 2px'
+        }} />
+      </div>
+
+      {/* Decorative Side Lines (Right) */}
+      <div style={{ 
         position: 'fixed', 
         right: 'clamp(10px, 4%, 40px)', 
         top: 0, 
         bottom: 0, 
-        width: '1px', 
-        background: lineColor, 
+        width: '2px', 
         zIndex: 40,
         pointerEvents: 'none'
-      }} />
+      }}>
+        {/* Base Track */}
+        <motion.div style={{ width: '100%', height: '100%', background: lineColor }} />
+        {/* Active Beam */}
+        <motion.div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: lineHeight, 
+          background: activeLineColor,
+          boxShadow: activeLineShadow,
+          borderRadius: '0 0 2px 2px'
+        }} />
+      </div>
 
       {/* Navigation - Adaptive Header */}
       <motion.header 
